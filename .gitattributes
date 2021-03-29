@@ -1,0 +1,2 @@
+voc/ORBvoc.txt filter=lfs diff=lfs merge=lfs -text
+voc/ORBvoc.txt.bin filter=lfs diff=lfs merge=lfs -text

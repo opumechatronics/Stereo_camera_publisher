@@ -1,0 +1,94 @@
+%YAML:1.0
+
+#--------------------------------------------------------------------------------------------
+# Camera Parameters. Adjust them!
+#--------------------------------------------------------------------------------------------
+
+# Camera calibration and distortion parameters (OpenCV) 
+#cameraMatrixL
+Camera.fx: 5.2569061657511509e+02
+Camera.fy: 5.2569061657511509e+02
+Camera.cx: 4.6150557447981282e+02
+Camera.cy: 2.7409307532556096e+02
+#distCoeffsL
+Camera.k1: -3.4828776048595911e-02
+Camera.k2: 5.3255842474875789e-02
+Camera.p1: 0
+Camera.p2: 0
+
+#Camera.width: 480
+#Camera.height: 270
+
+# Camera frames per second 
+Camera.fps: 30.0
+# Camera.fps: 21.6
+# Camera.fps: 3.0
+# Camera.fps: 1.0
+
+# stereo baseline times fx
+# Camera.bf: 379.8145
+# davinci xi: baseline 0.005 [m] * fx 525.690 = 2.62845
+#Camera.bf: 2.62845
+Camera.bf: 2628.45
+
+# Close/Far threshold. Baseline times.
+ThDepth: 50
+
+
+# Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
+Camera.RGB: 1
+
+#--------------------------------------------------------------------------------------------
+# ORB Parameters
+#--------------------------------------------------------------------------------------------
+
+# ORB Extractor: Number of features per image
+# default
+# ORBextractor.nFeatures: 2000
+#ORBextractor.nFeatures: 2500
+# ORBextractor.nFeatures: 4000
+ORBextractor.nFeatures: 3000
+# ORBextractor.nFeatures: 1500
+# ORBextractor.nFeatures: 1000
+# ORBextractor.nFeatures: 10000
+# ORBextractor.nFeatures: 5000
+# ORBextractor.nFeatures: 50000
+#ORBextractor.nFeatures: 500 # minimum?
+
+# ORB Extractor: Scale factor between levels in the scale pyramid 	
+# default
+#ORBextractor.scaleFactor: 1.1
+ORBextractor.scaleFactor: 1.2
+#ORBextractor.scaleFactor: 1.5
+
+# ORB Extractor: Number of levels in the scale pyramid	
+#default
+ORBextractor.nLevels: 3
+#ORBextractor.nLevels: 8
+#ORBextractor.nLevels: 12
+#ORBextractor.nLevels: 5
+
+# ORB Extractor: Fast threshold
+# Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
+# Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
+# You can lower these values if your images have low contrast			
+# default
+#ORBextractor.iniThFAST: 20
+#ORBextractor.minThFAST: 7
+ORBextractor.iniThFAST: 5
+ORBextractor.minThFAST: 3
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#--------------------------------------------------------------------------------------------
+Viewer.KeyFrameSize: 1
+Viewer.KeyFrameLineWidth: 1
+Viewer.GraphLineWidth: 1
+Viewer.PointSize:2
+Viewer.CameraSize: 3
+Viewer.CameraLineWidth: 2
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -1000
+Viewer.ViewpointZ: -1
+Viewer.ViewpointF: 2000
+

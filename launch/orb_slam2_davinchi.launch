@@ -1,0 +1,74 @@
+<launch>
+  <node name="orb_slam2_stereo" pkg="orb_slam2_ros"
+      type="orb_slam2_ros_stereo" output="screen">
+
+       <remap from="image_left/image_color_rect" to="/camera/davincixi/left_image" />
+       <remap from="image_right/image_color_rect" to="/camera/davincixi/right_image" />
+
+       <param name="publish_pointcloud" type="bool" value="true" />
+       <param name="publish_pose" type="bool" value="true" />
+       <param name="localize_only" type="bool" value="false" />
+       <param name="reset_map" type="bool" value="true" />
+
+       <!-- static parameters -->
+       <!-->
+       reference : http://wiki.ros.org/orb_slam2_ros
+       reference2 : ./orb_slam2_tum2_rgbd.yaml, 
+                    ./orb_slam2_r200_stereo.launch
+       load_map, map_file : False, None 
+       settingfile : davinchi
+       voc file : default
+       <-->
+       <param name="load_map" type="bool" value="false" />
+       <param name="map_file" type="string" value="map.bin" />
+       <!--param name="settings_file" type="string" value="$(find orb_slam2davinchi)/config/davincixi_stereo_30deg_L_960_540.yaml" /-->
+       <param name="voc_file" type="string" value="$(find orb_slam2davinchi)/voc/ORBvoc.txt" />
+
+       <param name="pointcloud_frame_id" type="string" value="map" />
+       <param name="camera_frame_id" type="string" value="camera_link" />
+
+       <param name="target_frame_id" type="string" value="world" />
+
+       <param name="min_num_kf_in_map" type="int" value="5" />
+
+        <!-- ORB parameters -->
+      <param name="/ORBextractor/nFeatures" type="int" value="3000" />
+      <param name="/ORBextractor/scaleFactor" type="double" value="1.2" />
+      <param name="/ORBextractor/nLevels" type="int" value="3" />
+      <param name="/ORBextractor/iniThFAST" type="int" value="5" />
+      <param name="/ORBextractor/minThFAST" type="int" value="3" />
+
+      <!-- Camera parameters -->
+      <!-- Camera frames per second -->
+      <param name="camera_fps" type="int" value="30" />
+      <!-- Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale) -->
+      <param name="camera_rgb_encoding" type="bool" value="true" />
+      <!-- Close/Far threshold. Baseline times. -->
+      <param name="ThDepth" type="double" value="50.0" />
+      <!-- Depthmap values factor (what pixel value in the depth image corresponds to 1m) -->
+      <param name="depth_map_factor" type="double" value="1.0" />
+
+      <!-- Camera calibration parameters -->
+      <!-- If the node should wait for a camera_info topic to take the camera calibration data -->
+      <param name="load_calibration_from_cam" type="bool" value="false" />
+      <!-- Camera calibration and distortion parameters (OpenCV) -->
+      <!-- Following values have been based on the calibration file associated with our serial number -->
+      <!-- The values can be extracted from the calibation file acquired from https://www.stereolabs.com/developers/calib/ -->
+      <param name="camera_fx" type="double" value="527.43" />
+      <!-- f_x = (resolution_x) / (2 * tan(HFOV / 2)) -->
+      <!-- NOTE: The focal length (fx) corresponds to horizontal FOV of 101.0285! -->
+      <param name="camera_fx" type="double" value="527.43" />
+      <param name="camera_fy" type="double" value="527.185" />
+      <param name="camera_cx" type="double" value="461.505" />
+      <param name="camera_cy" type="double" value="274.093" />
+      <!-- Camera calibration and distortion parameters (OpenCV) -->
+      <param name="camera_k1" type="double" value="-0.034828" />
+      <param name="camera_k2" type="double" value="0.0532558" />
+      <param name="camera_p1" type="double" value="0.0" />
+      <param name="camera_p2" type="double" value="0.0" />
+      <param name="camera_k3" type="double" value="0.0" />
+      <!-- Stereo baseline times fx, camera_baseline = f_x * baseline (approx.) -->
+      <param name="camera_baseline" type="double" value="63.2916" /> <!-- Baseline = 119.667 -->
+       
+  </node>
+</launch>
