@@ -20,8 +20,10 @@ def main():
 
     #Set up Node 
     rospy.init_node("video_publsiher", anonymous=True)
-    left_image_pub = rospy.Publisher("/camera/davincixi/left_iamge", Image, queue_size=10)
+    left_image_pub  = rospy.Publisher("/camera/davincixi/left_image", Image, queue_size=10)
     right_image_pub = rospy.Publisher("/camera/davincixi/right_image", Image, queue_size=10)
+    #right_image_pub = rospy.Publisher("/camera/right_image", Image, queue_size=10)
+    left_camera_info = rospy.Publisher("image_left/camera_info", CameraInfo, queue_size=10)
 
     video = cv2.VideoCapture(video_file_path)
 
@@ -39,23 +41,31 @@ def main():
     half_width = left_width
     half_height = height//2
     
-    ret, img = video.read()
+    #camera info
+    camera_info = CameraInfo()
+    camera_info.width = left_width
+    camera_info.height = height
+    
+    #camera info publisher
+    left_camera_info.publish(camera_info)
 
-    while True:
-    #while video.grab() and not rospy.is_shutdown():
+    #ret, img = video.read()
+
+    #while True:
+    while video.grab() and not rospy.is_shutdown():
         
-        """
+        
         tmp, img = video.retrieve()
         if not tmp:
             break
         
         cv2.imwrite("original.jpg", img)
-        """
+        
         #splite image and resize to half size
         img_left = img[0:height, 0:left_width]
         img_right = img[0:height, left_width:width]
-        img_left = cv2.resize(img_left, (half_height, half_width))
-        img_right = cv2.resize(img_right, (half_height, half_width))
+        #img_left = cv2.resize(img_left, (half_height, half_width))
+        #img_right = cv2.resize(img_right, (half_height, half_width))
         
         now_time = rospy.Time.now()   
         #left image publisher
@@ -77,7 +87,7 @@ def main():
 
         except CvBridgeError as err:
             print(err)
-        
+
         rate.sleep()
         
 
