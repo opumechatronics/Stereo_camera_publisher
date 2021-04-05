@@ -22,7 +22,7 @@
        <param name="load_map" type="bool" value="false" />
        <param name="map_file" type="string" value="map.bin" />
        <!--param name="settings_file" type="string" value="$(find orb_slam2davinchi)/config/davincixi_stereo_30deg_L_960_540.yaml" /-->
-       <param name="voc_file" type="string" value="$(find orb_slam2davinchi)/voc/ORBvoc.txt" />
+       <param name="voc_file" type="string" value="$(find orb_slam2_ros)/orb_slam2/Vocabulary/ORBvoc.txt" />
 
        <param name="pointcloud_frame_id" type="string" value="map" />
        <param name="camera_frame_id" type="string" value="camera_link" />
