@@ -10,6 +10,9 @@ project(orb_slam2davinchi)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  std_msgs
+  geometry_msgs
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -203,3 +206,12 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
+
+add_executable(printer src/slam_pose_print.cpp)
+target_link_libraries(printer
+  ${catkin_LIBRARIES}
+)

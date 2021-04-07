@@ -6,6 +6,7 @@ import rosparam
 import message_filters
 from std_msgs.msg import String
 
+import time
 import numpy as np
 import cv2
 import rospy
@@ -31,16 +32,15 @@ def main():
         print("not exist")
         return
 
-    print("exist")
-
-    fps = video.get(cv2.CAP_PROP_FPS)
+    frame_count = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = int(video.get(cv2.CAP_PROP_FPS))
     rate = rospy.Rate(fps)
     width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     left_width = int(width//2)
     half_width = left_width
     half_height = height//2
-    
+
     #camera info
     camera_info = CameraInfo()
     camera_info.width = left_width
@@ -49,13 +49,29 @@ def main():
     #camera info publisher
     left_camera_info.publish(camera_info)
 
-    #ret, img = video.read()
+    pre_time = -1
+    start = time.time()
 
-    #while True:
-    while video.grab() and not rospy.is_shutdown():
+    #for i in range(frame_count):
+    while not rospy.is_shutdown():
+    #while video.grab() and not rospy.is_shutdown():
+        now_time = time.time()
+        if pre_time == -1:
+            pre_time = now_time
         
-        
-        tmp, img = video.retrieve()
+        progress_time = now_time - pre_time
+
+        # sec to msec
+        progress_time = progress_time * 1000
+        progress_frame = progress_time / (1000 / 30.0)
+        print progress_time, progress_frame
+
+        if progress_frame > frame_count:
+            break
+
+        #tmp, img = video.read()
+        video.set(cv2.CAP_PROP_POS_FRAMES, int(progress_frame))
+        tmp, img = video.read()
         if not tmp:
             break
         
@@ -67,11 +83,11 @@ def main():
         #img_left = cv2.resize(img_left, (half_height, half_width))
         #img_right = cv2.resize(img_right, (half_height, half_width))
         
-        now_time = rospy.Time.now()   
+        ros_now_time = rospy.Time.now()   
         #left image publisher
         try:
             img_msg_left = bridge.cv2_to_imgmsg(img_left, "bgr8")
-            img_msg_left.header.stamp = now_time
+            img_msg_left.header.stamp = ros_now_time
             img_msg_left.header.frame_id = "camera_link"
             left_image_pub.publish(img_msg_left)
 
@@ -81,15 +97,15 @@ def main():
         #right image publisher
         try:
             img_msg_right = bridge.cv2_to_imgmsg(img_right, "bgr8")
-            img_msg_right.header.stamp = now_time
+            img_msg_right.header.stamp = ros_now_time
             img_msg_right.header.frame_id = "camera_link"
             right_image_pub.publish(img_msg_right)
 
         except CvBridgeError as err:
             print(err)
-
-        rate.sleep()
-        
+        print(now_time)
+        #rate.sleep()
+    print time.time() - start
 
         
         
