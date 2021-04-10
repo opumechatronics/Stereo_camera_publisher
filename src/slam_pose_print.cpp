@@ -45,7 +45,7 @@ void posestampCallback(const geometry_msgs::PoseStamped& posestamped)
     csv << str << std::endl;
     ROS_INFO("ROS: %u.09%u", ros_duration.sec, ros_duration.nsec);
     ROS_INFO("x:%d, y:%d, z:%d", posestamped.pose.position.x, posestamped.pose.position.y, posestamped.pose.position.z);
-    ROS_INFO("roll:%d, pitch:%d, yaw:%d", posestamped.pose.position.x, posestamped.pose.position.y, posestamped.pose.position.z);
+    ROS_INFO("roll:%d, pitch:%d, yaw:%d", roll, pitch, yaw);
 }
 
 int main(int argc, char **argv)

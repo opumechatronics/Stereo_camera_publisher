@@ -13,7 +13,10 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   tf
+  cv_bridge
+  image_transport
 )
+find_package(OpenCV REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -191,7 +194,7 @@ include_directories(
 # install(FILES
 #   # myfile1
 #   # myfile2
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+#   DESTINATION ${CATKIN_PACKAGE_SHARE_D  ESTINATION}
 # )
 
 #############
@@ -207,11 +210,20 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
+
 include_directories(
+  /usr/local/include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 add_executable(printer src/slam_pose_print.cpp)
 target_link_libraries(printer
   ${catkin_LIBRARIES}
 )
+
+#add_executable(stereo_pub src/stereo_camera_pub.cpp)
+#target_link_libraries(stereo_pub
+#  ${catkin_LIBRARIES}
+#  ${OpenCV_INCLUDE_DIRS}
+#)
