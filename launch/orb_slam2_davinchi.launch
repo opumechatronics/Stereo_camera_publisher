@@ -29,24 +29,24 @@
 
        <param name="target_frame_id" type="string" value="base_link" />
 
-       <param name="min_num_kf_in_map" type="int" value="5" />
+       <param name="min_num_kf_in_map" type="int" value="150" />
 
-        <!-- ORB parameters -->
-      <param name="/ORBextractor/nFeatures" type="int" value="3000" />
-      <param name="/ORBextractor/scaleFactor" type="double" value="1.2" />
-      <param name="/ORBextractor/nLevels" type="int" value="3" />
-      <param name="/ORBextractor/iniThFAST" type="int" value="5" />
-      <param name="/ORBextractor/minThFAST" type="int" value="3" />
+       <!-- ORB parameters -->
+       <param name="/ORBextractor/nFeatures" type="int" value="14000" />
+       <param name="/ORBextractor/scaleFactor" type="double" value="1.2" />
+       <param name="/ORBextractor/nLevels" type="int" value="8" />
+       <param name="/ORBextractor/iniThFAST" type="int" value="5" />
+       <param name="/ORBextractor/minThFAST" type="int" value="2" />
 
-      <!-- Camera parameters -->
-      <!-- Camera frames per second -->
-      <param name="camera_fps" type="int" value="30" />
-      <!-- Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale) -->
-      <param name="camera_rgb_encoding" type="bool" value="true" />
-      <!-- Close/Far threshold. Baseline times. -->
-      <param name="ThDepth" type="double" value="50.0" />
-      <!-- Depthmap values factor (what pixel value in the depth image corresponds to 1m) -->
-      <param name="depth_map_factor" type="double" value="1.0" />
+       <!-- Camera parameters -->
+       <!-- Camera frames per second -->
+       <param name="camera_fps" type="int" value="60" />
+       <!-- Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale) -->
+       <param name="camera_rgb_encoding" type="bool" value="true" />
+       <!-- Close/Far threshold. Baseline times. -->
+       <param name="ThDepth" type="double" value="40.0" />
+       <!-- Deptmap values factor (what pixel value in the depth image corresponds to 1m) -->
+       <param name="depth_map_factor" type="double" value="1.0" />
 
       <!-- Camera calibration parameters -->
       <!-- If the node should wait for a camera_info topic to take the camera calibration data -->

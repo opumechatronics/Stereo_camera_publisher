@@ -38,14 +38,15 @@ void posestampCallback(const geometry_msgs::PoseStamped& posestamped)
 
     ros::Duration ros_duration = time - start;
     char str[256];
-    sprintf(str, "%u.09%u %f %f %f %f %f %f", ros_duration.sec, ros_duration.nsec, posestamped.pose.position.x, posestamped.pose.position.y, posestamped.pose.position.z,
-                                    posestamped.pose.position.x, posestamped.pose.position.y, posestamped.pose.position.z);
-
-    ROS_INFO("ROS: %s", str);
+    sprintf(str, "%u.%u %f %f %f %f %f %f", ros_duration.sec, ros_duration.nsec, posestamped.pose.position.x, posestamped.pose.position.y, posestamped.pose.position.z,
+                                    roll, pitch, yaw);
     csv << str << std::endl;
-    ROS_INFO("ROS: %u.09%u", ros_duration.sec, ros_duration.nsec);
-    ROS_INFO("x:%d, y:%d, z:%d", posestamped.pose.position.x, posestamped.pose.position.y, posestamped.pose.position.z);
-    ROS_INFO("roll:%d, pitch:%d, yaw:%d", roll, pitch, yaw);
+
+    //ROS_INFO("ROS: %s", str);
+    //csv << str << std::endl;
+    //ROS_INFO("ROS: %u.09%u", ros_duration.sec, ros_duration.nsec);
+    //ROS_INFO("x:%d, y:%d, z:%d", posestamped.pose.position.x, posestamped.pose.position.y, posestamped.pose.position.z);
+    //ROS_INFO("roll:%d, pitch:%d, yaw:%d", roll, pitch, yaw);
 }
 
 int main(int argc, char **argv)
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     ros::Subscriber sub = nh.subscribe("/orb_slam2_stereo/pose", 10, posestampCallback);
 
-    csv.open("pose_stamp_output.csv");
+    csv.open("/home/bkmn/catkin_ws/pose_stamp_output.csv");
     csv << "time(sec) x y z roll pitch yaw" << std::endl;
     ros::spin();
 

@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(orb_slam2davinchi)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
-
+#add_compile_options(-std=c++11 -lopencv_core -lopencv_imgproc -lopencv_imgcodecs)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -211,8 +210,8 @@ include_directories(
 # catkin_add_nosetests(test)
 
 
+
 include_directories(
-  /usr/local/include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
 )
@@ -222,8 +221,8 @@ target_link_libraries(printer
   ${catkin_LIBRARIES}
 )
 
-#add_executable(stereo_pub src/stereo_camera_pub.cpp)
-#target_link_libraries(stereo_pub
-#  ${catkin_LIBRARIES}
-#  ${OpenCV_INCLUDE_DIRS}
-#)
+add_executable(stereo_pub src/stereo_camera_pub.cpp)
+target_link_libraries(stereo_pub
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
