@@ -1,9 +1,0 @@
-<launch>
-  <!-- rosbag を再生するノード -->
-  <node name="rosbag" pkg="rosbag" type="play" required="true" args="/home/bkmel/catkin_ws/archive.bag"/>
-  <!-- カメラ映像から画像ファイルを生成するノード -->
-  <node name="extract" pkg="image_view" type="extract_images" respawn="false" output="screen">
-    <remap from="image" to="/camera/davincixi/left_image"/>
-    <param name="filename_format" value="/home/bkmel/catkin_ws/surgery_bag/frame%04d.jpg"/>
-  </node>
-</launch>

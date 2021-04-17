@@ -1,5 +1,0 @@
-<launch>
-  <!-- rosbag を再生するノード -->
-  <node name="publisher" pkg="orb_slam2davinchi" type="stereo_pub" output="screen" />
-  <node name="printer" pkg="orb_slam2davinchi" type="printer" output="screen" />
-</launch>
