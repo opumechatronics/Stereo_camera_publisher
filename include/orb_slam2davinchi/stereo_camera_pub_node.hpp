@@ -18,12 +18,14 @@
 class stereo_camera_pub_node : public rclcpp::Node
 {
 public:
-    explicit stereo_camera_pub_node();
+    explicit stereo_camera_pub_node(const std::string &node_name="",
+    const rclcpp::NodeOptions &node_options = rclcpp::NodeOptions());
     ~stereo_camera_pub_node(){};
 
 private:
     void publish_left_camera(cv::Mat image);
     void publish_right_camera(cv::Mat image);
+    void TimerCallback();
 
     rclcpp::Time current_frame_time_;
     image_transport::Publisher left_image_pub_;
@@ -40,6 +42,12 @@ private:
     uint32_t height_;
     uint32_t pub_width_;
     uint32_t pub_height_;
+    cv::Size pubsize_;
+    cv::Point left_image_start_point;
+    cv::Point right_image_start_point;
+    cv::Rect left_image_roi;
+    cv::Rect right_image_roi;
+
 
     std::string node_name_;
 };
