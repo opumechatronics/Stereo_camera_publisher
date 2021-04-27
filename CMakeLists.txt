@@ -39,7 +39,7 @@ ament_target_dependencies(stereo_camera_pub
 
 install(TARGETS
   stereo_camera_pub
-  DESTINATION lib/{$PROJECT_NAME}
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
