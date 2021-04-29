@@ -1,0 +1,4 @@
+stereo_camera_publisher:
+  ros_parameters:
+    video_path: "/home/bkmn/colcon_ws/video/20200218_102324_0_0.avi"
+    enable_camera: false
