@@ -19,7 +19,7 @@ class stereo_camera_pub_node : public rclcpp::Node
 {
 public:
     explicit stereo_camera_pub_node(const std::string &node_name="",
-    const rclcpp::NodeOptions &node_options = rclcpp::NodeOptions());
+        const rclcpp::NodeOptions &node_options = rclcpp::NodeOptions());
     ~stereo_camera_pub_node(){};
     void init();
 
@@ -28,14 +28,18 @@ private:
     void publish_left_camera(cv::Mat image);
     void publish_right_camera(cv::Mat image);
     void TimerCallback();
+    void TimerCallback2_();
     
     rclcpp::Time current_frame_time_;
     image_transport::Publisher left_image_pub_;
     image_transport::Publisher right_image_pub_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr left_image_pub1_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr right_image_pub1_;
+    rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr camera_info_pub_;
     rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::TimerBase::SharedPtr timer_camera_info_;
     std::shared_ptr<image_transport::ImageTransport> image_transport_;
+    sensor_msgs::msg::CameraInfo camera_info;
 
     std::string video_path_;
     bool enable_camera_;

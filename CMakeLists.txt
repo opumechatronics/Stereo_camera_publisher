@@ -19,6 +19,7 @@ find_package(cv_bridge REQUIRED)
 find_package(image_common REQUIRED)
 find_package(image_transport REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(launch_testing_ament_cmake REQUIRED)
 
 include_directories(include)
 
@@ -40,6 +41,15 @@ ament_target_dependencies(stereo_camera_pub
 install(TARGETS
   stereo_camera_pub
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config
+)
+
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
 )
 
 if(BUILD_TESTING)

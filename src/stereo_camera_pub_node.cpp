@@ -34,6 +34,8 @@ void stereo_camera_pub_node::init()
         //throw std::runtime_error("Can't open video");
     }
 
+    rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_sensor_data;
+
     height_ = video_.get(cv::CAP_PROP_FRAME_HEIGHT);
     width_ = video_.get(cv::CAP_PROP_FRAME_WIDTH);
     fps_ = video_.get(cv::CAP_PROP_FPS);
@@ -50,10 +52,35 @@ void stereo_camera_pub_node::init()
     left_image_roi = cv::Rect(left_image_start_point, pubsize_);
     right_image_roi = cv::Rect(right_image_start_point, pubsize_);
 
+    camera_info_pub_ = this->create_publisher<sensor_msgs::msg::CameraInfo>(node_name_ + "/camera_info", 10);
+
     timer_ = this->create_wall_timer(std::chrono::milliseconds(33),
                                      std::bind(&stereo_camera_pub_node::TimerCallback, this));
+    
+    timer_camera_info_ = this->create_wall_timer(std::chrono::milliseconds(10),
+                                                 std::bind(&stereo_camera_pub_node::TimerCallback2_, this));
 
+    
+    camera_info.header.frame_id = "davinci";
+    camera_info.height = height_;
+    camera_info.width = width_;
+    
+    
+    camera_info.k[0] = 5.2569061657511509e+02;
+    camera_info.k[4] = 5.2569061657511509e+02;
+    camera_info.k[2] = 4.6150557447981282e+02;
+    camera_info.k[5] = 2.7409307532556096e+02;
+
+    camera_info.d.resize(9);
+    camera_info.d[0] = -3.4828776048595911e-02;
+    camera_info.d[1] = 5.3255842474875789e-02;
+    camera_info.d[2] = 0.0;
+    camera_info.d[3] = 0;
+    camera_info.d[4] = 0;
+    camera_info.p[3] = 0;
+    
     RCLCPP_INFO(this->get_logger(), "Create instance");
+
 }
 
 void stereo_camera_pub_node::publish_left_camera(cv::Mat image)
@@ -91,7 +118,15 @@ void stereo_camera_pub_node::TimerCallback()
     cv::Mat right_image = frame_(right_image_roi);
 
     current_frame_time_ = rclcpp::Time();
+    
+    //this->camera_info_pub_->publish(camera_info);
+    
     publish_left_camera(left_image);
     publish_right_camera(right_image);
+    
+}
 
+void stereo_camera_pub_node::TimerCallback2_()
+{
+    camera_info_pub_->publish(camera_info);
 }
