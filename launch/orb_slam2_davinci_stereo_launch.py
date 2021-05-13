@@ -12,10 +12,14 @@ def generate_launch_description():
     params_file = LaunchConfiguration('params_file')
     voc_file = LaunchConfiguration('voc_file')
 
+    print(os.path.join(
+                get_package_share_directory("orb_slam2davinci"),
+                'config', 'davincixi_stereo.yaml'))
+
     remappings = [
-        ('/image_left/image_color_rect', '/stereo_camera_publisher/left/image_raw'),
-        ('/image_right/image_color_rect', '/stereo_camera_publisher/right/image_raw'),
-        ('/camera/camera_info', '/stereo_camera_publisher/camera_info'),
+        ('/image_left/image_color_rect', '/stereo_camera_pub/davinci/left'),
+        ('/image_right/image_color_rect', '/stereo_camera_pub/davinci/right'),
+        ('/camera/camera_info', '/stereo_camera_pub/camera_info'),
     ]
 
     return LaunchDescription([

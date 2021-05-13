@@ -4,7 +4,7 @@
 int main(int argc, char *argv[])
 {
     rclcpp::init(argc, argv);
-    auto node = std::make_shared<stereo_camera_pub_node>("stereo_camera_publisher");
+    auto node = std::make_shared<stereo_camera_pub_node>("stereo_camera_pub");
     node->init();
     rclcpp::spin(node);
 

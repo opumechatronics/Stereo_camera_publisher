@@ -14,6 +14,8 @@
 #include <std_msgs/msg/header.hpp>
 
 #include <memory>
+#include <filesystem>
+#include <iterator>
 
 class stereo_camera_pub_node : public rclcpp::Node
 {
@@ -27,7 +29,8 @@ public:
 private:
     void publish_left_camera(cv::Mat image);
     void publish_right_camera(cv::Mat image);
-    void TimerCallback();
+    void VideoPublishTimerCallback();
+    void ImagePublishTimerCallback();
     void TimerCallback2_();
     
     rclcpp::Time current_frame_time_;
@@ -36,19 +39,27 @@ private:
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr left_image_pub1_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr right_image_pub1_;
     rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr camera_info_pub_;
-    rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::TimerBase::SharedPtr timer_image_pub_;
     rclcpp::TimerBase::SharedPtr timer_camera_info_;
     std::shared_ptr<image_transport::ImageTransport> image_transport_;
     sensor_msgs::msg::CameraInfo camera_info;
 
+    // Args
     std::string video_path_;
     bool enable_camera_;
+    bool pub_from_image_;
+    std::string image_directory_;
     int camera_num_;
+    
+
     cv::VideoCapture video_;
+    std::vector<std::string> image_paths_;
+    std::vector<std::string>::iterator image_path_itr_;
+
     size_t frame_id_;
     cv::Mat frame_;
     uint32_t fps_;
-    uint32_t fps_count_;
+    uint32_t frame_count_;
     uint32_t width_;
     uint32_t height_;
     uint32_t pub_width_;

@@ -1,4 +1,4 @@
-orb_slam2davinci_stereo:
+orb_slam2_stereo:
   ros__parameters:
     #--------------------------------------------------------------------------------------------
     # Camera Parameters. Adjust them!
@@ -13,8 +13,9 @@ orb_slam2davinci_stereo:
     #distCoeffsL
     Camera.k1: -3.4828776048595911e-02
     Camera.k2: 5.3255842474875789e-02
-    Camera.p1: 0
-    Camera.p2: 0
+    Camera.p1: 0.0
+    Camera.p2: 0.0
+    Camera.p3: 0.0
     
     #Camera.width: 480
     #Camera.height: 270
@@ -43,23 +44,22 @@ orb_slam2davinci_stereo:
     #--------------------------------------------------------------------------------------------
     publish_pointcloud: true
     publish_pose: true
-    localize_only: false
-    reset_map: false
-
-    #static parameters
-    load_map: false
-    map_file: map.bin
-
+    publish_tf: true
     pointcloud_frame_id: map
     camear_frame_id: camera_link
-    min_num_kf_in_map: 5
+    map_file: map.bin
+     #static parameters
+    load_map: false
+
+    localize_only: false
+    reset_map: false
+    
+    min_num_kf_in_map: 120
 
     # ORB parameters
     camera_fps: 30
     camera_rbg_encoding: true
-    theDepth: 50.0
-    depth_map_factor: 1.0
-    camera_baseline: 2628.45
+    
 
     # ORB Extractor: Number of features per image
     # default
@@ -71,19 +71,19 @@ orb_slam2davinci_stereo:
     # ORBextractor.nFeatures: 1000
     # ORBextractor.nFeatures: 10000
     # ORBextractor.nFeatures: 5000
-    ORBextractor.nFeatures: 50000
+    ORBextractor/nFeatures: 9000
     #ORBextractor.nFeatures: 500 # minimum?
     
     # ORB Extractor: Scale factor between levels in the scale pyramid 	
     # default
     #ORBextractor.scaleFactor: 1.1
-    ORBextractor.scaleFactor: 1.2
+    ORBextractor/scaleFactor: 1.2
     #ORBextractor.scaleFactor: 1.5
     
     # ORB Extractor: Number of levels in the scale pyramid	
     #default
     #ORBextractor.nLevels: 3
-    ORBextractor.nLevels: 8
+    ORBextractor/nLevels: 8
     #ORBextractor.nLevels: 12
     #ORBextractor.nLevels: 5
     
@@ -92,11 +92,13 @@ orb_slam2davinci_stereo:
     # Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
     # You can lower these values if your images have low contrast			
     # default
-    ORBextractor.iniThFAST: 20
-    ORBextractor.minThFAST: 7
+    ORBextractor/iniThFAST: 5
+    ORBextractor/minThFAST: 2
     #ORBextractor.iniThFAST: 5
     #ORBextractor.minThFAST: 3
-    
+    TheDepth: 50.0
+    depth_map_factor: 1.0
+    camera_baseline: 64.2916
 
     
     
