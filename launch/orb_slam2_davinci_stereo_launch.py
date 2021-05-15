@@ -32,7 +32,7 @@ def generate_launch_description():
             'params_file',
             default_value=os.path.join(
                 get_package_share_directory("orb_slam2davinci"),
-                'config', 'davincixi_stereo.yaml'),
+                'config', 'orb_slam_davincixi_stereo.yaml'),
             description='Full path to the ROS2 parameters file to use for all launched nodes'),
 
         DeclareLaunchArgument(
