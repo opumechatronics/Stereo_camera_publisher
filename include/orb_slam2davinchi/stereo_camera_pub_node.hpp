@@ -56,7 +56,7 @@ private:
     std::vector<std::string> image_paths_;
     std::vector<std::string>::iterator image_path_itr_;
 
-    size_t frame_id_;
+    std::string frame_id_;
     cv::Mat frame_;
     uint32_t fps_;
     uint32_t frame_count_;
@@ -70,6 +70,15 @@ private:
     cv::Rect left_image_roi;
     cv::Rect right_image_roi;
 
+    double Camera_fx_;
+    double Camera_fy_;
+    double Camera_cx_;
+    double Camera_cy_;
+    double Camera_k1_;
+    double Camera_k2_;
+    double Camera_p1_;
+    double Camera_p2_;
+    double Camera_p3_;
 
     std::string node_name_;
 };

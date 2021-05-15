@@ -1,0 +1,17 @@
+stereo_camera_pub:
+  ros__parameters:
+    Camera_cx: 979.1637439699139
+    Camera_cy: 547.1882179590643
+    Camera_fx: 1438.0466671545435
+    Camera_fy: 1438.0466671545435
+    Camera_k1: -0.4151153950457443
+    Camera_k2: 0.2392730074323726
+    Camera_p1: 0.0
+    Camera_p2: 0.0
+    Camera_p3: -0.09011790303871801
+    camera_num: 0
+    enable_camera: false
+    frame_id: original_stereo
+    image_path: ' '
+    pub_from_image: false
+    video_path: /home/bkmn/colcon_ws/video/2021-05-14_15-10-09.mp4

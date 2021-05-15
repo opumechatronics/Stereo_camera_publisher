@@ -4,7 +4,8 @@
 #include <string>
 #include "orb_slam2davinchi/stereo_camera_pub_node.hpp"
 
-#define VIDEO_PATH "/home/bkmn/colcon_ws/video/20200218_102324_0_0.avi"
+//#define VIDEO_PATH "/home/bkmn/colcon_ws/video/20200218_102324_0_0.avi"
+#define VIDEO_PATH "/home/bkmn/colcon_ws/video/2021-05-14_15-10-09.mp4"
 
 stereo_camera_pub_node::stereo_camera_pub_node(
     const std::string &node_name,
@@ -19,6 +20,18 @@ stereo_camera_pub_node::stereo_camera_pub_node(
     declare_parameter("camera_num", rclcpp::ParameterValue(0));
     declare_parameter("image_path", "/home/bkmn/colcon/image");
     declare_parameter("fps", rclcpp::ParameterValue(30));
+    declare_parameter("frame_id", "davinci");
+
+    declare_parameter("Camera_fx", rclcpp::ParameterValue(double(0.0)));
+    declare_parameter("Camera_fy", rclcpp::ParameterValue(double(0.0)));
+    declare_parameter("Camera_cx", rclcpp::ParameterValue(double(0.0)));
+    declare_parameter("Camera_cy", rclcpp::ParameterValue(double(0.0)));
+    declare_parameter("Camera_k1", rclcpp::ParameterValue(double(0.0)));
+    declare_parameter("Camera_k2", rclcpp::ParameterValue(double(0.0)));
+    declare_parameter("Camera_p1", rclcpp::ParameterValue(double(0.0)));
+    declare_parameter("Camera_p2", rclcpp::ParameterValue(double(0.0)));
+    declare_parameter("Camera_p3", rclcpp::ParameterValue(double(0.0)));
+
 }
 
 void stereo_camera_pub_node::init()
@@ -29,7 +42,20 @@ void stereo_camera_pub_node::init()
     get_parameter("camera_num", camera_num_);
     get_parameter("pub_from_image", pub_from_image_);
     get_parameter("image_path", image_directory_);
-    
+    get_parameter("frame_id", frame_id_);
+
+    get_parameter("Camera_fx", Camera_fx_);
+    get_parameter("Camera_fy", Camera_fy_);
+    get_parameter("Camera_cx", Camera_cx_);
+    get_parameter("Camera_cy", Camera_cy_);
+    get_parameter("Camera_k1", Camera_k1_);
+    get_parameter("Camera_k2", Camera_k2_);
+    get_parameter("Camera_p1", Camera_p1_);
+    get_parameter("Camera_p2", Camera_p2_);
+    get_parameter("Camera_p3", Camera_p3_);
+
+    RCLCPP_INFO(this->get_logger(), "%s", video_path_.data());
+    RCLCPP_INFO(this->get_logger(), "%d", pub_from_image_);
 
     // Publish from image
     if(pub_from_image_){
@@ -56,7 +82,6 @@ void stereo_camera_pub_node::init()
     else{
         if(enable_camera_){
             video_.open(camera_num_);
-            rclcpp::shutdown();
         }
 
         else{
@@ -76,8 +101,8 @@ void stereo_camera_pub_node::init()
     }
 
     image_transport_ = std::make_shared<image_transport::ImageTransport>(shared_from_this());
-    left_image_pub_ = image_transport_->advertise(node_name_ + "/davinci/left", 10);
-    right_image_pub_ = image_transport_->advertise(node_name_ + "/davinci/right", 10);
+    left_image_pub_ = image_transport_->advertise(node_name_ + "/" + frame_id_ + "/left", 10);
+    right_image_pub_ = image_transport_->advertise(node_name_ + "/" + frame_id_ + "/right", 10);
 
     //rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_sensor_data;
     
@@ -113,18 +138,18 @@ void stereo_camera_pub_node::init()
     camera_info.width = width_;
     
     
-    camera_info.k[0] = 5.2569061657511509e+02;
-    camera_info.k[4] = 5.2569061657511509e+02;
-    camera_info.k[2] = 4.6150557447981282e+02;
-    camera_info.k[5] = 2.7409307532556096e+02;
+    camera_info.k[0] = Camera_fx_;
+    camera_info.k[4] = Camera_fy_;
+    camera_info.k[2] = Camera_cx_;
+    camera_info.k[5] = Camera_cy_;
 
     camera_info.d.resize(9);
-    camera_info.d[0] = -3.4828776048595911e-02;
-    camera_info.d[1] = 5.3255842474875789e-02;
-    camera_info.d[2] = 0.0;
-    camera_info.d[3] = 0.0;
-    camera_info.d[4] = 0.0;
-    camera_info.p[3] = 0.0;
+    camera_info.d[0] = Camera_k1_;
+    camera_info.d[1] = Camera_k2_;
+    camera_info.d[2] = Camera_p1_;
+    camera_info.d[3] = Camera_p2_;
+    camera_info.d[4] = Camera_p3_;
+    camera_info.p[3] = 100;
     
     RCLCPP_INFO(this->get_logger(), "Create instance");
 

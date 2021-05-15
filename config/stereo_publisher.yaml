@@ -3,18 +3,18 @@ stereo_camera_pub:
 
     video_path: /home/bkmn/colcon_ws/video/20200218_102324_0_0.avi
     enable_camera: false
-    pub_from_image: true
+    pub_from_image: false
     camera_num: 0
     image_path: /home/bkmn/colcon_ws/image/data/masked
 
     frame_id: davinci
-    Camera/fx: 5.2569061657511509e+02
-    Camera/fy: 5.2569061657511509e+02
-    Camera/cx: 4.6150557447981282e+02
-    Camera/cy: 2.7409307532556096e+02
+    Camera_fx: 5.2569061657511509e+02
+    Camera_fy: 5.2569061657511509e+02
+    Camera_cx: 4.6150557447981282e+02
+    Camera_cy: 2.7409307532556096e+02
     #distCoeffsL
-    Camera/k1: -3.4828776048595911e-02
-    Camera/k2: 5.3255842474875789e-02
-    Camera/p1: 0.0
-    Camera/p2: 0.0
-    Camera/p3: 0.0
+    Camera_k1: -3.4828776048595911e-02
+    Camera_k2: 5.3255842474875789e-02
+    Camera_p1: 0.0
+    Camera_p2: 0.0
+    Camera_p3: 0.0

@@ -1,0 +1,93 @@
+orb_slam2_stereo:
+  ros__parameters:
+    #--------------------------------------------------------------------------------------------
+    # Camera Parameters. Adjust them!
+    #--------------------------------------------------------------------------------------------
+    
+    # Camera calibration and distortion parameters (OpenCV) 
+    #cameraMatrixL
+    #Camera.width: 480
+    #Camera.height: 270
+    
+    # Camera frames per second 
+    # Camera.fps: 30.0
+    # Camera.fps: 21.6
+    # Camera.fps: 3.0
+    # Camera.fps: 1.0
+    
+    # stereo baseline times fx
+    # Camera.bf: 379.8145
+    # davinci xi: baseline 0.005 [m] * fx 525.690 = 2.62845
+    #Camera.bf: 2.62845
+    # Camera.bf: 2628.45
+    
+    # Close/Far threshold. Baseline times.
+    # ThDepth: 50
+    
+    
+    # Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
+    # Camera.RGB: 1
+    
+    #--------------------------------------------------------------------------------------------
+    # ORB Parameters
+    #--------------------------------------------------------------------------------------------
+    publish_pointcloud: true
+    publish_pose: true
+    publish_tf: true
+    pointcloud_frame_id: map
+    camear_frame_id: camera_link
+    map_file: map.bin
+     #static parameters
+    load_map: false
+
+    localize_only: false
+    reset_map: false
+    
+    min_num_kf_in_map: 3
+
+    # ORB parameters
+    camera_fps: 30
+    camera_rbg_encoding: true
+    
+
+    # ORB Extractor: Number of features per image
+    # default
+    # ORBextractor.nFeatures: 2000
+    #ORBextractor.nFeatures: 2500
+    # ORBextractor.nFeatures: 4000
+    # ORBextractor.nFeatures: 3000
+    # ORBextractor.nFeatures: 1500
+    # ORBextractor.nFeatures: 1000
+    # ORBextractor.nFeatures: 10000
+    # ORBextractor.nFeatures: 5000
+    ORBextractor/nFeatures: 5000
+    #ORBextractor.nFeatures: 500 # minimum?
+    
+    # ORB Extractor: Scale factor between levels in the scale pyramid 	
+    # default
+    #ORBextractor.scaleFactor: 1.1
+    ORBextractor/scaleFactor: 1.1
+    #ORBextractor.scaleFactor: 1.5
+    
+    # ORB Extractor: Number of levels in the scale pyramid	
+    #default
+    #ORBextractor.nLevels: 3
+    ORBextractor/nLevels: 3
+    #ORBextractor.nLevels: 12
+    #ORBextractor.nLevels: 5
+    
+    # ORB Extractor: Fast threshold
+    # Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
+    # Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
+    # You can lower these values if your images have low contrast			
+    # default
+    ORBextractor/iniThFAST: 5
+    ORBextractor/minThFAST: 3
+    #ORBextractor.iniThFAST: 5
+    #ORBextractor.minThFAST: 3
+    TheDepth: 50.0
+    depth_map_factor: 1.0
+    camera_baseline: 100.0
+
+    
+    
