@@ -14,4 +14,4 @@ stereo_camera_pub:
     frame_id: original_stereo
     image_path: ' '
     pub_from_image: false
-    video_path: /home/bkmn/colcon_ws/video/CameraFixed_WithNoise.mp4
+    video_path: /home/bkmn/colcon_ws/video/CameraFixed_WithNoise_MatchTracking.mp4
