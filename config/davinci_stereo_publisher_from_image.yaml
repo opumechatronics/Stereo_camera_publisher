@@ -5,7 +5,7 @@ stereo_camera_pub:
     enable_camera: false
     pub_from_image: true
     camera_num: 0
-    image_path: /home/bkmn/colcon_ws/images/masked/
+    image_path: /home/bkmn/colcon_ws/images/blur/
 
     frame_id: davinci
     Camera_fx: 5.2569061657511509e+02

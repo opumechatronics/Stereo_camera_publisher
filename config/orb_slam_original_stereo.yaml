@@ -46,7 +46,7 @@ orb_slam2_stereo:
     min_num_kf_in_map: 3
 
     # ORB parameters
-    camera_fps: 30
+    camera_fps: 40
     camera_rbg_encoding: true
     
 
@@ -60,7 +60,7 @@ orb_slam2_stereo:
     # ORBextractor.nFeatures: 1000
     # ORBextractor.nFeatures: 10000
     # ORBextractor.nFeatures: 5000
-    ORBextractor/nFeatures: 10000
+    ORBextractor/nFeatures: 5000
     #ORBextractor.nFeatures: 500 # minimum?
     
     # ORB Extractor: Scale factor between levels in the scale pyramid 	
