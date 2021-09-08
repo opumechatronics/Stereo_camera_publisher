@@ -21,6 +21,7 @@ stereo_camera_pub_node::stereo_camera_pub_node(
     declare_parameter("image_path", "/home/bkmn/colcon/image");
     declare_parameter("fps", rclcpp::ParameterValue(30));
     declare_parameter("frame_id", "davinci");
+    declare_parameter("is_grayscale", rclcpp::ParameterValue(false));
 
     declare_parameter("Camera_fx", rclcpp::ParameterValue(double(0.0)));
     declare_parameter("Camera_fy", rclcpp::ParameterValue(double(0.0)));
@@ -43,6 +44,7 @@ void stereo_camera_pub_node::init()
     get_parameter("pub_from_image", pub_from_image_);
     get_parameter("image_path", image_directory_);
     get_parameter("frame_id", frame_id_);
+    get_parameter("is_grayscale", is_grayscale_);
 
     get_parameter("Camera_fx", Camera_fx_);
     get_parameter("Camera_fy", Camera_fy_);
@@ -54,8 +56,10 @@ void stereo_camera_pub_node::init()
     get_parameter("Camera_p2", Camera_p2_);
     get_parameter("Camera_p3", Camera_p3_);
 
+    get_parameter("fps", fps_);
+
     RCLCPP_INFO(this->get_logger(), "%s", video_path_.data());
-    RCLCPP_INFO(this->get_logger(), "%d", pub_from_image_);
+    RCLCPP_INFO(this->get_logger(), "%d, FPS %d", pub_from_image_, fps_);
 
     // Publish from image
     if(pub_from_image_){
@@ -69,7 +73,7 @@ void stereo_camera_pub_node::init()
         
         image_path_itr_ = image_paths_.begin();
         
-        get_parameter("fps", fps_);
+        
 
         frame_count_ = image_paths_.size();
 
@@ -95,7 +99,7 @@ void stereo_camera_pub_node::init()
 
         height_ = video_.get(cv::CAP_PROP_FRAME_HEIGHT);
         width_ = video_.get(cv::CAP_PROP_FRAME_WIDTH);
-        fps_ = video_.get(cv::CAP_PROP_FPS);
+        //fps_ = video_.get(cv::CAP_PROP_FPS);
         frame_count_ = video_.get(cv::CAP_PROP_FRAME_COUNT);
 
     }
@@ -121,11 +125,11 @@ void stereo_camera_pub_node::init()
     camera_info_pub_ = this->create_publisher<sensor_msgs::msg::CameraInfo>(node_name_ + "/camera_info", 10);
 
     if(pub_from_image_){
-        timer_image_pub_ = this->create_wall_timer(std::chrono::milliseconds(33),
+        timer_image_pub_ = this->create_wall_timer(std::chrono::milliseconds(freq),
                                     std::bind(&stereo_camera_pub_node::ImagePublishTimerCallback, this));
     }
     else{
-        timer_image_pub_ = this->create_wall_timer(std::chrono::milliseconds(33),
+        timer_image_pub_ = this->create_wall_timer(std::chrono::milliseconds(freq),
                                      std::bind(&stereo_camera_pub_node::VideoPublishTimerCallback, this));
     }
 
@@ -160,10 +164,18 @@ void stereo_camera_pub_node::publish_left_camera(cv::Mat image)
     std_msgs::msg::Header header;
     header.stamp = current_frame_time_;
     header.frame_id = "sss";
-    const sensor_msgs::msg::Image::SharedPtr image_msg =
-        cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
+    sensor_msgs::msg::Image::SharedPtr image_msg;
+    if(this->is_grayscale_){
+        cv::Mat gray_image;
+        cv::cvtColor(image, gray_image, cv::COLOR_BGR2GRAY);
+        image_msg = cv_bridge::CvImage(header, "mono8", gray_image).toImageMsg();
+    }
+    else{
+        image_msg = cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
+        
+        //this->left_image_pub1_->publish(*image_msg);
+    }
     this->left_image_pub_.publish(image_msg);
-    //this->left_image_pub1_->publish(*image_msg);
 }
 
 void stereo_camera_pub_node::publish_right_camera(cv::Mat image)
@@ -171,8 +183,17 @@ void stereo_camera_pub_node::publish_right_camera(cv::Mat image)
     std_msgs::msg::Header header;
     header.stamp = current_frame_time_;
     header.frame_id = "sss";
-    const sensor_msgs::msg::Image::SharedPtr image_msg =
-        cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
+    sensor_msgs::msg::Image::SharedPtr image_msg;
+    if(this->is_grayscale_){
+        cv::Mat gray_image;
+        cv::cvtColor(image, gray_image, cv::COLOR_BGR2GRAY);
+        image_msg = cv_bridge::CvImage(header, "mono8", gray_image).toImageMsg();
+    }
+    else{
+        image_msg = cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
+        
+        //this->left_image_pub1_->publish(*image_msg);
+    }
     this->right_image_pub_.publish(image_msg);
     //this->right_image_pub1_->publish(*image_msg);
 }

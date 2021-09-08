@@ -9,10 +9,6 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
 
     params_file = LaunchConfiguration('params_file')
-
-    print(os.path.join(
-                get_package_share_directory("orb_slam2davinci"),
-                'config', 'stereo_publisher.yaml'))
     
     return LaunchDescription([
 

@@ -54,7 +54,7 @@ orb_slam2_stereo:
     localize_only: false
     reset_map: true
     
-    min_num_kf_in_map: 20
+    min_num_kf_in_map: 60
 
     # ORB parameters
     camera_fps: 30
@@ -71,13 +71,13 @@ orb_slam2_stereo:
     # ORBextractor.nFeatures: 1000
     # ORBextractor.nFeatures: 10000
     # ORBextractor.nFeatures: 5000
-    ORBextractor/nFeatures: 20000
+    ORBextractor/nFeatures: 5000
     #ORBextractor.nFeatures: 500 # minimum?
     
     # ORB Extractor: Scale factor between levels in the scale pyramid 	
     # default
     #ORBextractor.scaleFactor: 1.1
-    ORBextractor/scaleFactor: 1.5
+    ORBextractor/scaleFactor: 1.1
     #ORBextractor.scaleFactor: 1.5
     
     # ORB Extractor: Number of levels in the scale pyramid	
@@ -86,7 +86,6 @@ orb_slam2_stereo:
     ORBextractor/nLevels: 8
     #ORBextractor.nLevels: 12
     #ORBextractor.nLevels: 5
-    #ORBextractor.nLevels: 8
     
     # ORB Extractor: Fast threshold
     # Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
@@ -95,11 +94,11 @@ orb_slam2_stereo:
     # default
     ORBextractor/iniThFAST: 20
     ORBextractor/minThFAST: 7
-    #ORBextractor/iniThFAST: 5
-    #ORBextractor/minThFAST: 3
+    #ORBextractor.iniThFAST: 5
+    #ORBextractor.minThFAST: 3
     TheDepth: 50.0
     depth_map_factor: 1.0
-    camera_baseline: 2628.45
+    camera_baseline: 64.2916
 
     
     

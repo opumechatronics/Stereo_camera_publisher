@@ -50,6 +50,7 @@ private:
     bool pub_from_image_;
     std::string image_directory_;
     int camera_num_;
+    bool is_grayscale_;
     
 
     cv::VideoCapture video_;

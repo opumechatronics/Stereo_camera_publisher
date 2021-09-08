@@ -1,11 +1,14 @@
 stereo_camera_pub:
   ros__parameters:
 
-    video_path: /home/bkmn/colcon_ws/video/20200218_102324_0_0.avi
+    video_path: /home/bkmn/dev/inpainting/images/videos/20200218_102324_0_0_inpainted.avi
     enable_camera: false
-    pub_from_image: true
+    pub_from_image: false
     camera_num: 0
     image_path: /home/bkmn/colcon_ws/images/masked/
+    is_grayscale: false
+
+    fps: 5
 
     frame_id: davinci
     Camera_fx: 5.2569061657511509e+02
