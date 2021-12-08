@@ -1,7 +1,7 @@
 stereo_camera_pub:
   ros__parameters:
 
-    video_path: /home/bkmn/dev/inpainting/images/videos/20200218_102324_0_0_inpainted.avi
+    video_path: /home/bkmn/dev/inpainting/images/videos/20200218_105527_0_115.avi
     enable_camera: false
     pub_from_image: false
     camera_num: 0

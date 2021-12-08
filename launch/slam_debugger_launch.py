@@ -8,25 +8,33 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
 
+    use_sim_time = LaunchConfiguration('use_sim_time')
     params_file = LaunchConfiguration('params_file')
-    
-    return LaunchDescription([
+    voc_file = LaunchConfiguration('voc_file')
 
+    params_file_for_pub = LaunchConfiguration('params_file_for_pub')
+
+    params_file_for_debug = LaunchConfiguration('params_file_for_debug')
+
+    print(os.path.join(
+                get_package_share_directory("orb_slam2davinci"),
+                'config', 'orb_slam_debugger.yaml'))
+
+    return LaunchDescription([
         DeclareLaunchArgument(
-            'params_file',
+            'params_file_for_debug',
             default_value=os.path.join(
                 get_package_share_directory("orb_slam2davinci"),
-                'config', 'stereo_publisher.yaml'),
+                'config', 'orb_slam_debugger.yaml'),
             description='Full path to the ROS2 parameters file to use for all launched nodes'),
-
 
         Node(
             parameters=[
-                params_file,
+                params_file_for_debug,
             ],
-            package='orb_slam2davinci',
-            node_executable='stereo_camera_pub',
-            node_name='stereo_camera_pub',
+            package='orb_slam_debugger',
+            executable='slam_debugger',
+            name='slam_debugger',
             output='screen',
         )
     ])

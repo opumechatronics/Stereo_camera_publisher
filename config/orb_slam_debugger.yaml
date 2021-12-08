@@ -1,0 +1,6 @@
+orb_slam_debugger:
+  ros__parameters:
+    enable_csv: true
+    csv_path: /home/bkmn/colcon_ws/debug/20_inpainted.csv
+    enable_image: false
+    image_path: /home/bkmn/colcon_ws/debug/image/
