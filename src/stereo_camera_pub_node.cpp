@@ -5,7 +5,7 @@
 #include "orb_slam2davinchi/stereo_camera_pub_node.hpp"
 
 //#define VIDEO_PATH "/home/bkmn/colcon_ws/video/20200218_102324_0_0.avi"
-#define VIDEO_PATH "/home/bkmn/colcon_ws/video/2021-05-14_15-10-09.mp4"
+#define VIDEO_PATH ""
 
 stereo_camera_pub_node::stereo_camera_pub_node(
     const std::string &node_name,
@@ -18,7 +18,7 @@ stereo_camera_pub_node::stereo_camera_pub_node(
     declare_parameter("enable_camera", rclcpp::ParameterValue(false));
     declare_parameter("pub_from_image", rclcpp::ParameterValue(false));
     declare_parameter("camera_num", rclcpp::ParameterValue(0));
-    declare_parameter("image_path", "/home/bkmn/colcon/image");
+    declare_parameter("image_path", "");
     declare_parameter("fps", rclcpp::ParameterValue(30));
     declare_parameter("frame_id", "davinci");
     declare_parameter("is_grayscale", rclcpp::ParameterValue(false));
@@ -99,7 +99,7 @@ void stereo_camera_pub_node::init()
 
         height_ = video_.get(cv::CAP_PROP_FRAME_HEIGHT);
         width_ = video_.get(cv::CAP_PROP_FRAME_WIDTH);
-        //fps_ = video_.get(cv::CAP_PROP_FPS);
+        fps_ = video_.get(cv::CAP_PROP_FPS);
         frame_count_ = video_.get(cv::CAP_PROP_FRAME_COUNT);
 
     }
