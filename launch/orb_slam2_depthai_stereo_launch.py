@@ -17,8 +17,8 @@ def generate_launch_description():
                 'config', 'davincixi_stereo.yaml'))
 
     remappings = [
-        ('/image_left/image_color_rect', '/stereo_camera_pub/original_stereo/left'),
-        ('/image_right/image_color_rect', '/stereo_camera_pub/original_stereo/right'),
+        ('/image_left/image_color_rect', '/stereo_camera_pub/depthai_stereo/left'),
+        ('/image_right/image_color_rect', '/stereo_camera_pub/depthai_stereo/right'),
         ('/camera/camera_info', '/stereo_camera_pub/camera_info'),
     ]
 
