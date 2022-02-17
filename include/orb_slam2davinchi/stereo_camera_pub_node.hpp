@@ -31,7 +31,8 @@ private:
     void publish_right_camera(cv::Mat image);
     void VideoPublishTimerCallback();
     void ImagePublishTimerCallback();
-    void TimerCallback2_();
+    void TimerCallback2CameraInfo();
+    void SetTimeStamp();
     
     rclcpp::Time current_frame_time_;
     image_transport::Publisher left_image_pub_;
@@ -71,6 +72,7 @@ private:
     cv::Rect left_image_roi;
     cv::Rect right_image_roi;
 
+    // Camera Info
     double Camera_fx_;
     double Camera_fy_;
     double Camera_cx_;

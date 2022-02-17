@@ -7,6 +7,7 @@
 //#define VIDEO_PATH "/home/bkmn/colcon_ws/video/20200218_102324_0_0.avi"
 #define VIDEO_PATH ""
 
+// constructor
 stereo_camera_pub_node::stereo_camera_pub_node(
     const std::string &node_name,
     const rclcpp::NodeOptions &node_options)
@@ -35,6 +36,7 @@ stereo_camera_pub_node::stereo_camera_pub_node(
 
 }
 
+//initilize
 void stereo_camera_pub_node::init()
 {
 
@@ -134,7 +136,7 @@ void stereo_camera_pub_node::init()
     }
 
     timer_camera_info_ = this->create_wall_timer(std::chrono::milliseconds(10),
-                                                 std::bind(&stereo_camera_pub_node::TimerCallback2_, this));
+                                                 std::bind(&stereo_camera_pub_node::TimerCallback2CameraInfo, this));
 
     
     camera_info.header.frame_id = "davinci";
@@ -159,6 +161,7 @@ void stereo_camera_pub_node::init()
 
 }
 
+// publish left image
 void stereo_camera_pub_node::publish_left_camera(cv::Mat image)
 {
     std_msgs::msg::Header header;
@@ -178,6 +181,7 @@ void stereo_camera_pub_node::publish_left_camera(cv::Mat image)
     this->left_image_pub_.publish(image_msg);
 }
 
+// publish right image
 void stereo_camera_pub_node::publish_right_camera(cv::Mat image)
 {
     std_msgs::msg::Header header;
@@ -198,6 +202,7 @@ void stereo_camera_pub_node::publish_right_camera(cv::Mat image)
     //this->right_image_pub1_->publish(*image_msg);
 }
 
+// timer callback that publish video frame from video
 void stereo_camera_pub_node::VideoPublishTimerCallback()
 {
     video_ >> frame_;
@@ -210,7 +215,8 @@ void stereo_camera_pub_node::VideoPublishTimerCallback()
     cv::Mat left_image = frame_(left_image_roi);
     cv::Mat right_image = frame_(right_image_roi);
 
-    current_frame_time_ = rclcpp::Time();
+    rclcpp::Clock ros_clock(RCL_ROS_TIME);
+    current_frame_time_ = ros_clock.now();
     
     //this->camera_info_pub_->publish(camera_info);
     
@@ -218,6 +224,7 @@ void stereo_camera_pub_node::VideoPublishTimerCallback()
     publish_right_camera(right_image);   
 }
 
+// timer callback that publish image frame from image
 void stereo_camera_pub_node::ImagePublishTimerCallback()
 {
     frame_ = cv::imread(*image_path_itr_);
@@ -230,6 +237,8 @@ void stereo_camera_pub_node::ImagePublishTimerCallback()
 
     RCLCPP_INFO(this->get_logger(), "%s", (*image_path_itr_).data());
 
+    SetTimeStamp();
+
     publish_left_camera(left_image);
     publish_right_camera(right_image);
 
@@ -239,7 +248,15 @@ void stereo_camera_pub_node::ImagePublishTimerCallback()
     }
 }
 
-void stereo_camera_pub_node::TimerCallback2_()
+// timer callback that publish camera info
+void stereo_camera_pub_node::TimerCallback2CameraInfo()
 {
     camera_info_pub_->publish(camera_info);
+}
+
+// set time stamp for header of topic
+void stereo_camera_pub_node::SetTimeStamp()
+{
+    rclcpp::Clock ros_clock(RCL_ROS_TIME);
+    current_frame_time_ = ros_clock.now();
 }

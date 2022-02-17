@@ -1,0 +1,22 @@
+stereo_camera_pub:
+  ros__parameters:
+    video_path: /home/bkmn/colcon_ws/videos/move300_v100a100_trush.mp4
+    enable_camera: false
+    pub_from_image: false
+    camera_num: 0
+    image_path: /home/bkmn/colcon_ws/images/masked/
+    is_grayscale: false
+
+    fps: 5
+
+    frame_id: davinci
+    Camera_fx: 795.25369841
+    Camera_fy: 795.25369841
+    Camera_cx: 672.1467694
+    Camera_cy: 385.47394832
+    #distCoeffsL
+    Camera_k1: 13.750572e-02
+    Camera_k2: -59.688676e-02
+    Camera_p1: 0.0019833
+    Camera_p2: 0.00085909
+    Camera_p3: 0.67776003
