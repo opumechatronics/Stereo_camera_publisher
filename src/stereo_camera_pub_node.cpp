@@ -148,6 +148,7 @@ void stereo_camera_pub_node::init()
     camera_info.k[4] = Camera_fy_;
     camera_info.k[2] = Camera_cx_;
     camera_info.k[5] = Camera_cy_;
+    camera_info.k[8] = 1.0;
 
     camera_info.d.resize(9);
     camera_info.d[0] = Camera_k1_;
@@ -155,7 +156,7 @@ void stereo_camera_pub_node::init()
     camera_info.d[2] = Camera_p1_;
     camera_info.d[3] = Camera_p2_;
     camera_info.d[4] = Camera_p3_;
-    camera_info.p[3] = 100;
+    camera_info.d[5] = 0.0;
     
     RCLCPP_INFO(this->get_logger(), "Create instance");
 

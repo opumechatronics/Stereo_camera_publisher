@@ -1,0 +1,17 @@
+stereo_camera_pub:
+  ros__parameters:
+    Camera_fx: 961.81671
+    Camera_fy: 963.80298
+    Camera_cx: 658.85128
+    Camera_cy: 362.35992
+    Camera_k1: -0.404335
+    Camera_k2: 0.167378
+    Camera_p1: -0.000048
+    Camera_p2: 0.001005
+    Camera_p3: 0.0
+    camera_num: 0
+    enable_camera: false
+    frame_id: elp
+    image_path: ' '
+    pub_from_image: false
+    video_path: /home/bkmn/colcon_ws/videos/14/masked_movie.avi
