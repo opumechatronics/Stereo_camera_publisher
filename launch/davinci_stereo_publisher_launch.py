@@ -28,5 +28,6 @@ def generate_launch_description():
             node_executable='stereo_camera_pub',
             node_name='stereo_camera_pub',
             output='screen',
+            prefix='gdb -ex run --args'
         )
     ])

@@ -8,6 +8,7 @@
 
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
+#include <camera_info_manager/camera_info_manager.h>
 
 #include <sensor_msgs/image_encodings.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
@@ -16,6 +17,8 @@
 #include <memory>
 #include <filesystem>
 #include <iterator>
+
+#include "orb_slam2davinchi/image_processing.hpp"
 
 class stereo_camera_pub_node : public rclcpp::Node
 {
@@ -29,6 +32,8 @@ public:
 private:
     void publish_left_camera(cv::Mat image);
     void publish_right_camera(cv::Mat image);
+    void publish_left_mask(cv::Mat image);
+    void publish_right_mask(cv::Mat image);
     void VideoPublishTimerCallback();
     void ImagePublishTimerCallback();
     void TimerCallback2CameraInfo();
@@ -37,6 +42,8 @@ private:
     rclcpp::Time current_frame_time_;
     image_transport::Publisher left_image_pub_;
     image_transport::Publisher right_image_pub_;
+    image_transport::Publisher left_mask_pub_;
+    image_transport::Publisher right_mask_pub_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr left_image_pub1_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr right_image_pub1_;
     rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr camera_info_pub_;
@@ -52,14 +59,22 @@ private:
     std::string image_directory_;
     int camera_num_;
     bool is_grayscale_;
+    bool is_params_file_;
+    std::string params_file_path_;
+    bool is_pub_mask_;
+    std::string mask_video_path_;
+    std::string image_proc_param_;
     
+    ImageProcessing img_proc_;
 
     cv::VideoCapture video_;
+    cv::VideoCapture mask_video_;
     std::vector<std::string> image_paths_;
     std::vector<std::string>::iterator image_path_itr_;
 
     std::string frame_id_;
     cv::Mat frame_;
+    cv::Mat frame_mask_;
     uint32_t fps_;
     uint32_t frame_count_;
     uint32_t width_;

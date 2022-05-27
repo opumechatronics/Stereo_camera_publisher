@@ -16,7 +16,8 @@ find_package(OpenCV REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
-find_package(image_common REQUIRED)
+#find_package(image_common REQUIRED)
+find_package(camera_info_manager REQUIRED)
 find_package(image_transport REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(launch_testing_ament_cmake REQUIRED)
@@ -34,7 +35,7 @@ ament_target_dependencies(stereo_camera_pub
   std_msgs
   geometry_msgs
   cv_bridge
-  image_common
+  camera_info_manager
   image_transport
   OpenCV)
 

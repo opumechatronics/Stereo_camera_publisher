@@ -1,17 +1,19 @@
 stereo_camera_pub:
   ros__parameters:
 
-    video_path: /home/opumechat/colcon_ws/videos/20200218_105527_0_115.avi
-    #video_path: /home/opumechat/devel/depthai-df/build/move300_v100a100_trush.mp4
-    enable_camera: false
-    pub_from_image: false
     camera_num: 0
-    image_path: /home/bkmn/colcon_ws/images/masked/
-    is_grayscale: false
-
-    fps: 5
-
+    enable_camera: false
     frame_id: davinci
+    image_path: ' '
+    pub_from_image: false
+    video_path: /home/bkmn/colcon_ws/videos/IPSJ_test1.avi
+    is_pub_mask: false
+    mask_path: /home/bkmn/colcon_ws/videos/surgery_move_camera_and_tool/mask_video.avi
+    is_params_file: true
+    params_file_path: file:///home/bkmn/colcon_ws/src/orb_slam2davinchi/config/davinci_Xi.yaml
+    #image_processing_params: none   #blur : processed blur 10 times, step : processed step blur 20 times
+    fps: 10
+
     Camera_fx: 5.2569061657511509e+02
     Camera_fy: 5.2569061657511509e+02
     Camera_cx: 4.6150557447981282e+02
@@ -22,3 +24,4 @@ stereo_camera_pub:
     Camera_p1: 0.0
     Camera_p2: 0.0
     Camera_p3: 0.0
+

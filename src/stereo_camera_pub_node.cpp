@@ -23,6 +23,11 @@ stereo_camera_pub_node::stereo_camera_pub_node(
     declare_parameter("fps", rclcpp::ParameterValue(30));
     declare_parameter("frame_id", "davinci");
     declare_parameter("is_grayscale", rclcpp::ParameterValue(false));
+    declare_parameter("is_params_file", rclcpp::ParameterValue(false));
+    declare_parameter("params_file_path", "");
+    declare_parameter("is_pub_mask", rclcpp::ParameterValue(false));
+    declare_parameter("mask_path", "");
+    declare_parameter("image_processing_params", "");
 
     declare_parameter("Camera_fx", rclcpp::ParameterValue(double(0.0)));
     declare_parameter("Camera_fy", rclcpp::ParameterValue(double(0.0)));
@@ -47,6 +52,11 @@ void stereo_camera_pub_node::init()
     get_parameter("image_path", image_directory_);
     get_parameter("frame_id", frame_id_);
     get_parameter("is_grayscale", is_grayscale_);
+    get_parameter("is_params_file", is_params_file_);
+    get_parameter("params_file_path", params_file_path_);
+    get_parameter("is_pub_mask", is_pub_mask_);
+    get_parameter("mask_path", mask_video_path_);
+    get_parameter("image_processing_params", image_proc_param_);
 
     get_parameter("Camera_fx", Camera_fx_);
     get_parameter("Camera_fy", Camera_fy_);
@@ -60,8 +70,11 @@ void stereo_camera_pub_node::init()
 
     get_parameter("fps", fps_);
 
-    RCLCPP_INFO(this->get_logger(), "%s", video_path_.data());
-    RCLCPP_INFO(this->get_logger(), "%d, FPS %d", pub_from_image_, fps_);
+    RCLCPP_INFO(this->get_logger(), "video file : %s", video_path_.data());
+    RCLCPP_INFO(this->get_logger(), "mask file: %s", mask_video_path_.data());
+    RCLCPP_INFO(this->get_logger(), "pub from image : %d, FPS %d", pub_from_image_, fps_);
+    RCLCPP_INFO(this->get_logger(), "publish with mask : %d", is_pub_mask_);
+    RCLCPP_INFO(this->get_logger(), "image processing type : %s", image_proc_param_.data());
 
     // Publish from image
     if(pub_from_image_){
@@ -99,16 +112,63 @@ void stereo_camera_pub_node::init()
             //throw std::runtime_error("Can't open video");
         }
 
+        if(is_pub_mask_){
+            mask_video_.open(mask_video_path_);
+        }
+
         height_ = video_.get(cv::CAP_PROP_FRAME_HEIGHT);
         width_ = video_.get(cv::CAP_PROP_FRAME_WIDTH);
-        fps_ = video_.get(cv::CAP_PROP_FPS);
+        //fps_ = video_.get(cv::CAP_PROP_FPS);
         frame_count_ = video_.get(cv::CAP_PROP_FRAME_COUNT);
 
     }
+    
+    camera_info_manager::CameraInfoManager cinfo(this);
+    if(is_params_file_){
+        RCLCPP_INFO(this->get_logger(), "camera_info_url exist");
+        cinfo.loadCameraInfo(params_file_path_);
+        try{
+            cinfo.validateURL(params_file_path_);
+            cinfo.loadCameraInfo(params_file_path_);
+            camera_info = cinfo.getCameraInfo();
+        }
+        catch(cv::Exception & e){
+            RCLCPP_ERROR(
+                this->get_logger(), "camera calibration failed to load: %s %s %s %i",
+                e.err.c_str(), e.func.c_str(), e.file.c_str(), e.line);
+        }
+    }
+
+    else{
+        camera_info.header.frame_id = "davinci";
+        camera_info.height = height_;
+        camera_info.width = width_;
+    
+    
+        camera_info.k[0] = Camera_fx_;
+        camera_info.k[4] = Camera_fy_;
+        camera_info.k[2] = Camera_cx_;
+        camera_info.k[5] = Camera_cy_;
+        camera_info.k[8] = 1.0;
+
+        camera_info.d.resize(9);
+        camera_info.d[0] = Camera_k1_;
+        camera_info.d[1] = Camera_k2_;
+        camera_info.d[2] = Camera_p1_;
+        camera_info.d[3] = Camera_p2_;
+        camera_info.d[4] = Camera_p3_;
+        camera_info.d[5] = 0.0;
+    }
+    
 
     image_transport_ = std::make_shared<image_transport::ImageTransport>(shared_from_this());
-    left_image_pub_ = image_transport_->advertise(node_name_ + "/" + frame_id_ + "/left", 10);
-    right_image_pub_ = image_transport_->advertise(node_name_ + "/" + frame_id_ + "/right", 10);
+    left_image_pub_ = image_transport_->advertise(node_name_ + "/left/image_raw", 10);
+    right_image_pub_ = image_transport_->advertise(node_name_ + "/right/image_raw", 10);
+
+    if(is_pub_mask_){
+        left_mask_pub_ = image_transport_->advertise(node_name_ + "/left/image_mask", 10);
+        right_mask_pub_ = image_transport_->advertise(node_name_ + "/right/image_mask", 10);
+    }
 
     //rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_sensor_data;
     
@@ -139,24 +199,6 @@ void stereo_camera_pub_node::init()
                                                  std::bind(&stereo_camera_pub_node::TimerCallback2CameraInfo, this));
 
     
-    camera_info.header.frame_id = "davinci";
-    camera_info.height = height_;
-    camera_info.width = width_;
-    
-    
-    camera_info.k[0] = Camera_fx_;
-    camera_info.k[4] = Camera_fy_;
-    camera_info.k[2] = Camera_cx_;
-    camera_info.k[5] = Camera_cy_;
-    camera_info.k[8] = 1.0;
-
-    camera_info.d.resize(9);
-    camera_info.d[0] = Camera_k1_;
-    camera_info.d[1] = Camera_k2_;
-    camera_info.d[2] = Camera_p1_;
-    camera_info.d[3] = Camera_p2_;
-    camera_info.d[4] = Camera_p3_;
-    camera_info.d[5] = 0.0;
     
     RCLCPP_INFO(this->get_logger(), "Create instance");
 
@@ -167,7 +209,7 @@ void stereo_camera_pub_node::publish_left_camera(cv::Mat image)
 {
     std_msgs::msg::Header header;
     header.stamp = current_frame_time_;
-    header.frame_id = "sss";
+    header.frame_id = frame_id_;
     sensor_msgs::msg::Image::SharedPtr image_msg;
     if(this->is_grayscale_){
         cv::Mat gray_image;
@@ -187,7 +229,7 @@ void stereo_camera_pub_node::publish_right_camera(cv::Mat image)
 {
     std_msgs::msg::Header header;
     header.stamp = current_frame_time_;
-    header.frame_id = "sss";
+    header.frame_id = frame_id_;
     sensor_msgs::msg::Image::SharedPtr image_msg;
     if(this->is_grayscale_){
         cv::Mat gray_image;
@@ -203,6 +245,48 @@ void stereo_camera_pub_node::publish_right_camera(cv::Mat image)
     //this->right_image_pub1_->publish(*image_msg);
 }
 
+// publish right image
+void stereo_camera_pub_node::publish_left_mask(cv::Mat image)
+{
+    std_msgs::msg::Header header;
+    header.stamp = current_frame_time_;
+    header.frame_id = frame_id_;
+    sensor_msgs::msg::Image::SharedPtr image_msg;
+    if(this->is_grayscale_){
+        cv::Mat gray_image;
+        cv::cvtColor(image, gray_image, cv::COLOR_BGR2GRAY);
+        image_msg = cv_bridge::CvImage(header, "mono8", gray_image).toImageMsg();
+    }
+    else{
+        image_msg = cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
+        
+        //this->left_image_pub1_->publish(*image_msg);
+    }
+    this->left_mask_pub_.publish(image_msg);
+    //this->right_image_pub1_->publish(*image_msg);
+}
+
+// publish right image
+void stereo_camera_pub_node::publish_right_mask(cv::Mat image)
+{
+    std_msgs::msg::Header header;
+    header.stamp = current_frame_time_;
+    header.frame_id = frame_id_;
+    sensor_msgs::msg::Image::SharedPtr image_msg;
+    if(this->is_grayscale_){
+        cv::Mat gray_image;
+        cv::cvtColor(image, gray_image, cv::COLOR_BGR2GRAY);
+        image_msg = cv_bridge::CvImage(header, "mono8", gray_image).toImageMsg();
+    }
+    else{
+        image_msg = cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
+        
+        //this->left_image_pub1_->publish(*image_msg);
+    }
+    this->right_mask_pub_.publish(image_msg);
+    //this->right_image_pub1_->publish(*image_msg);
+}
+
 // timer callback that publish video frame from video
 void stereo_camera_pub_node::VideoPublishTimerCallback()
 {
@@ -212,17 +296,42 @@ void stereo_camera_pub_node::VideoPublishTimerCallback()
         RCLCPP_ERROR(this->get_logger(), "No Frame in video");
         rclcpp::shutdown();
     }
-    RCLCPP_INFO(this->get_logger(), "pub");
+    //RCLCPP_INFO(this->get_logger(), "publish");
     cv::Mat left_image = frame_(left_image_roi);
     cv::Mat right_image = frame_(right_image_roi);
 
-    rclcpp::Clock ros_clock(RCL_ROS_TIME);
-    current_frame_time_ = ros_clock.now();
+    SetTimeStamp();
     
     //this->camera_info_pub_->publish(camera_info);
-    
-    publish_left_camera(left_image);
-    publish_right_camera(right_image);   
+
+    if(is_pub_mask_){
+        mask_video_ >> frame_mask_;
+
+        cv::Mat left_mask = frame_mask_(left_image_roi);
+        cv::Mat right_mask = frame_mask_(right_image_roi);
+        
+        if(image_proc_param_ == "blur"){
+            RCLCPP_INFO(this->get_logger(), "blur");
+            left_image = img_proc_.blured_times(left_image, left_mask, 11, 10);
+            right_image = img_proc_.blured_times(right_image, right_mask, 11, 10);
+        }
+        else if(image_proc_param_ == "step"){
+            RCLCPP_INFO(this->get_logger(), "step");
+            left_image = img_proc_.step_blured(left_image, left_mask, 11, 3, 10);
+            right_image = img_proc_.step_blured(right_image, right_mask, 11, 3, 10);
+        }
+
+        publish_left_mask(left_mask);
+        publish_right_mask(right_mask);
+        publish_left_camera(left_image);
+        publish_right_camera(right_image);
+
+    }
+    else{
+        publish_left_camera(left_image);
+        publish_right_camera(right_image);
+    }
+
 }
 
 // timer callback that publish image frame from image
@@ -234,14 +343,14 @@ void stereo_camera_pub_node::ImagePublishTimerCallback()
     cv::Mat left_image = frame_(left_image_roi);
     cv::Mat right_image = frame_(right_image_roi);
 
-    current_frame_time_ = rclcpp::Time();
-
     RCLCPP_INFO(this->get_logger(), "%s", (*image_path_itr_).data());
 
     SetTimeStamp();
 
     publish_left_camera(left_image);
     publish_right_camera(right_image);
+
+    
 
     if(image_paths_.end() == image_path_itr_){
         RCLCPP_ERROR(this->get_logger(), "No image to publish");
@@ -252,6 +361,7 @@ void stereo_camera_pub_node::ImagePublishTimerCallback()
 // timer callback that publish camera info
 void stereo_camera_pub_node::TimerCallback2CameraInfo()
 {
+    camera_info.header.stamp = current_frame_time_;
     camera_info_pub_->publish(camera_info);
 }
 

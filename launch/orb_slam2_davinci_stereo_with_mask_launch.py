@@ -28,6 +28,14 @@ def generate_launch_description():
             default_value='false',
             description='Use simulation (Gazebo) clock if true'),
 
+        Node(
+            package='generate_mask_with_unet',
+            node_executable='generator',
+            node_name='generator',
+            output='screen',
+            remappings=remappings
+        ),
+
         DeclareLaunchArgument(
             'params_file',
             default_value=os.path.join(

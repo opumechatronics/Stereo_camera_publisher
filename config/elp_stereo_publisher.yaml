@@ -12,6 +12,14 @@ stereo_camera_pub:
     camera_num: 0
     enable_camera: false
     frame_id: elp
+    is_grayscale: true
     image_path: ' '
     pub_from_image: false
-    video_path: /home/bkmn/colcon_ws/videos/14/masked_movie.avi
+    video_path: /home/bkmn/colcon_ws/videos/move100/blured_movie.avi
+    is_pub_mask: false
+    mask_path: /home/bkmn/colcon_ws/videos/14/mask_movie.avi
+    is_params_file: true
+    params_file_path: file:///home/bkmn/colcon_ws/src/orb_slam2davinchi/config/left.yaml
+
+
+
